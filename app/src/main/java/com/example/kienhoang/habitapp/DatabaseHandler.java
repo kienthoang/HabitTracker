@@ -18,19 +18,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_DAILY_REMINDERS = "dailyreminders";
     private static final String TABLE_DAILY_HABIT_COUNTS = "dailyhabitcounts";
 
-    private static final String ATTR_ID = "id";
-    private static final String ATTR_NAME = "name";
-    private static final String ATTR_TITLE = "title";
-    private static final String ATTR_DESC = "description";
-    private static final String ATTR_GOAL = "goal";
-    private static final String ATTR_DATE = "date";
-    private static final String ATTR_COUNT = "count";
-
-    private static final String ATTR_HABIT_ID = "habit_id";
-    private static final String ATTR_HABIT_TYPE_ID = "habit_type_id";
-    private static final String ATTR_DAILY_DATA_ID = "daily_data_id";
-    private static final String ATTR_REMINDERS_ID = "daily_reminder_id";
-
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -39,26 +26,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database) {
         String createHabitsTableSQL = "CREATE TABLE " + TABLE_HABITS + "("
-                + ATTR_ID + " INTEGER PRIMARY KEY," + ATTR_HABIT_TYPE_ID + " INTEGER NOT NULL,"
-                + ATTR_NAME + " TEXT NOT NULL," + ATTR_GOAL + " INTEGER NOT NULL"
+                + DatabaseAttributes.ID + " INTEGER PRIMARY KEY,"
+                + DatabaseAttributes.HABIT_TYPE_ID + " INTEGER NOT NULL,"
+                + DatabaseAttributes.HABIT_NAME + " TEXT NOT NULL,"
+                + DatabaseAttributes.HABIT_GOAL + " INTEGER NOT NULL,"
+                + DatabaseAttributes.HABIT_BREAK_OR_BUILD + " INTEGER"
                 + ")";
         String createHabitTypesTableSQL = "CREATE TABLE " + TABLE_HABIT_TYPES + "("
-                + ATTR_ID + " INTEGER PRIMARY KEY," + ATTR_NAME + " TEXT NOT NULL"
+                + DatabaseAttributes.ID + " INTEGER PRIMARY KEY,"
+                + DatabaseAttributes.HABIT_TYPE_NAME + " TEXT NOT NULL"
                 + ")";
         String createRemindersTableSQL = "CREATE TABLE " + TABLE_REMINDERS + "("
-                + ATTR_ID + " INTEGER PRIMARY KEY," + ATTR_TITLE + " TEXT NOT NULL,"
-                + ATTR_DESC + " TEXT NOT NULL"
+                + DatabaseAttributes.ID + " INTEGER PRIMARY KEY,"
+                + DatabaseAttributes.REMINDER_TITLE + " TEXT NOT NULL,"
+                + DatabaseAttributes.REMINDER_DESC + " TEXT NOT NULL,"
+                + DatabaseAttributes.REMINDER_TYPE_ID + " INTEGER NOT NULL"
                 + ")";
         String createDailyDataTableSQL = "CREATE TABLE " + TABLE_DAILY_DATA + "("
-                + ATTR_ID + " INTEGER PRIMARY KEY," + ATTR_DATE + " DATE NOT NULL"
+                + DatabaseAttributes.ID + " INTEGER PRIMARY KEY,"
+                + DatabaseAttributes.DAILY_DATA_DATE + " STRING NOT NULL"
                 + ")";
         String createDailyRemindersTableSQL = "CREATE TABLE " + TABLE_DAILY_REMINDERS + "("
-                + ATTR_ID + " INTEGER PRIMARY KEY," + ATTR_DAILY_DATA_ID + " INTEGER NOT NULL,"
-                + ATTR_REMINDERS_ID + " INTEGER NOT NULL"
+                + DatabaseAttributes.ID + " INTEGER PRIMARY KEY,"
+                + DatabaseAttributes.DAILY_REMINDER_DATA_ID + " INTEGER NOT NULL,"
+                + DatabaseAttributes.DAILY_REMINDER_ID + " INTEGER NOT NULL"
                 + ")";
         String createDailyHabitCountsTableSQL = "CREATE TABLE " + TABLE_DAILY_HABIT_COUNTS + "("
-                + ATTR_ID + " INTEGER PRIMARY KEY," + ATTR_DAILY_DATA_ID + " INTEGER NOT NULL,"
-                + ATTR_HABIT_ID + " INTEGER NOT NULL," + ATTR_COUNT + " INTEGER"
+                + DatabaseAttributes.ID + " INTEGER PRIMARY KEY,"
+                + DatabaseAttributes.DAILY_HABIT_COUNT_DATA_ID + " INTEGER NOT NULL,"
+                + DatabaseAttributes.DAILY_HABIT_COUNT_HABIT_ID + " INTEGER NOT NULL,"
+                + DatabaseAttributes.DAILY_HABIT_COUNT + " INTEGER"
                 + ")";
 
         database.execSQL(createHabitsTableSQL);
@@ -79,5 +76,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         database.execSQL("DROP TABLE IF EXISTS " + TABLE_DAILY_HABIT_COUNTS);
 
         onCreate(database);
+    }
+
+    public void addHabit(Habit habit) {
+
     }
 }
