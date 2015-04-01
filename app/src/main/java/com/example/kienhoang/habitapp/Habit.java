@@ -1,6 +1,7 @@
 package com.example.kienhoang.habitapp;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 /**
  * Created by kienhoang on 3/31/15.
@@ -16,6 +17,11 @@ public class Habit implements DatabaseObject {
     private int goal;
 
     public Habit(HabitType habitType, String name, int breakOrBuild, int goal) {
+        this(-1, habitType, name, breakOrBuild, goal);
+    }
+
+    public Habit(int id, HabitType habitType, String name, int breakOrBuild, int goal) {
+        this.id = id;
         this.habitType = habitType;
         this.name = name;
         this.breakOrBuild = breakOrBuild;
@@ -28,6 +34,14 @@ public class Habit implements DatabaseObject {
 
     public void setId() {
         this.id = id;
+    }
+
+    public boolean isBreakHabit() {
+        return this.breakOrBuild == HABIT_BREAK;
+    }
+
+    public boolean isBuildHabit() {
+        return this.breakOrBuild == HABIT_BUILD;
     }
 
     public ContentValues toContentValues() {

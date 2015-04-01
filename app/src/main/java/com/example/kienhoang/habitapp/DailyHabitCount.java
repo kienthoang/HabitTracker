@@ -12,6 +12,11 @@ public class DailyHabitCount {
     private int count;
 
     public DailyHabitCount(Habit habit, DailyData dailyData, int count) {
+        this(-1, habit, dailyData, count);
+    }
+
+    public DailyHabitCount(int id, Habit habit, DailyData dailyData, int count) {
+        this.id = id;
         this.habit = habit;
         this.dailyData = dailyData;
         this.count = count;
@@ -23,6 +28,10 @@ public class DailyHabitCount {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getCount() {
+        return this.count;
     }
 
     public ContentValues toContentValues() {

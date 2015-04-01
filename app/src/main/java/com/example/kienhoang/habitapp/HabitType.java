@@ -10,6 +10,11 @@ public class HabitType {
     private String name;
 
     public HabitType(String name) {
+        this(-1, name);
+    }
+
+    public HabitType(int id, String name) {
+        this.id = id;
         this.name = name;
     }
 
