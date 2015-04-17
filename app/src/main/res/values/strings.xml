@@ -4,5 +4,10 @@
     <string name="app_name">HabitApp</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="drawer_item_habits">Habits</string>
+    <string name="drawer_item_home">Home</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
+    <string name="title_activity_home">HomeActivity</string>
 
 </resources>

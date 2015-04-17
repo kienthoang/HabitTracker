@@ -96,7 +96,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return cursor;
     }
 
-    // Main fragment.
+    // Main Activity.
     public HabitType getHabitTypeById(int id) {
         HabitType habitType = null;
         Cursor cursor = this.fetchBySelection(TABLE_HABIT_TYPES,
@@ -191,7 +191,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return reminders;
     }
 
-    // Update habit daily counts fragment.
+    // Update habit daily counts Activity.
     public DailyData getDailyDataByDate(Date date) {
         DailyData dailyData = null;
         Cursor cursor = this.fetchBySelection(TABLE_DAILY_DATA,
@@ -240,7 +240,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return habitCount;
     }
 
-    // Add habit Fragment.
+    // Add-habit Activity.
     public List<HabitType> getAllHabitTypes() {
         SQLiteDatabase database = this.getReadableDatabase();
         Cursor cursor = database.rawQuery("SELECT * FROM " + TABLE_HABIT_TYPES, null);
