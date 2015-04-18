@@ -8,10 +8,10 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_add_record"
+        android:id="@+id/action_add_habit"
         android:orderInCategory="200"
         android:title="Search"
-        android:icon="@drawable/ic_add"
+        android:icon="@drawable/ic_add_habit"
         app:showAsAction="ifRoom"
         ></item>
 

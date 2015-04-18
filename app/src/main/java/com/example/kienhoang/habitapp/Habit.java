@@ -7,8 +7,8 @@ import android.database.Cursor;
  * Created by kienhoang on 3/31/15.
  */
 public class Habit implements DatabaseObject {
-    private static final int HABIT_BREAK = 0;
-    private static final int HABIT_BUILD = 1;
+    public static final int HABIT_BREAK = 0;
+    public static final int HABIT_BUILD = 1;
 
     private int id;
     private HabitType habitType;
@@ -34,6 +34,10 @@ public class Habit implements DatabaseObject {
 
     public void setId() {
         this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public boolean isBreakHabit() {

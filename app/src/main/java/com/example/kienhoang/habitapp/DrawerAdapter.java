@@ -22,7 +22,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     // Creating a ViewHolder which extends the RecyclerView View Holder
     // ViewHolder are used to to store the inflated views in order to recycle them
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         int Holderid;
 
         TextView textView;
@@ -32,8 +32,6 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         public ViewHolder(View itemView, int ViewType, Context context) {
             super(itemView);
             this.context = context;
-            itemView.setClickable(true);
-            itemView.setOnClickListener(this);
 
             if (ViewType == TYPE_ITEM) {
                 textView = (TextView) itemView.findViewById(R.id.rowText);
@@ -42,11 +40,6 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
             } else {
                 Holderid = 0;
             }
-        }
-
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(this.context,"The Item Clicked is: " + getPosition(),Toast.LENGTH_SHORT).show();
         }
     }
 

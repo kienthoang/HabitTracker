@@ -89,7 +89,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         for (int i = 0; i < selections.length - 1; i++) {
             selectionQuery += selections[i] + "=? AND ";
         }
-        selectionQuery += selections[selections.length] + "=?";
+        selectionQuery += selections[selections.length - 1] + "=?";
 
         Cursor cursor = database.query(table, null, selectionQuery, selectionArgs, null, null, null,
                 null);
@@ -102,7 +102,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = this.fetchBySelection(TABLE_HABIT_TYPES,
                 new String[]{DatabaseAttributes.ID},
                 new String[]{Integer.toString(id)});
-        if (cursor != null) {
+        if (isNonEmptyCursor(cursor)) {
+            cursor.moveToFirst();
+            habitType = new HabitType(cursor.getInt(0), cursor.getString(1));
+        }
+
+        return habitType;
+    }
+
+    public HabitType getHabitTypeByName(String name) {
+        HabitType habitType = null;
+        Cursor cursor = this.fetchBySelection(TABLE_HABIT_TYPES,
+                new String[]{DatabaseAttributes.HABIT_TYPE_NAME},
+                new String[]{name});
+        if (isNonEmptyCursor(cursor)) {
             cursor.moveToFirst();
             habitType = new HabitType(cursor.getInt(0), cursor.getString(1));
         }
@@ -159,7 +172,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             Cursor cursor = this.fetchBySelection(TABLE_DAILY_REMINDERS,
                     new String[] {DatabaseAttributes.DAILY_REMINDER_DATA_ID},
                     new String[] {Integer.toString(dailyData.getId())});
-            if (cursor != null && cursor.getCount() > 0) {
+            if (isNonEmptyCursor(cursor)) {
                 cursor.moveToFirst();
 
                 do {
@@ -167,7 +180,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     Cursor reminderCursor = this.fetchBySelection(TABLE_REMINDERS,
                             new String[] {DatabaseAttributes.ID},
                             new String[] {Integer.toString(reminderId)});
-                    if (reminderCursor != null) {
+                    if (isNonEmptyCursor(reminderCursor)) {
                         reminderCursor.moveToFirst();
                         String title = reminderCursor.getString(1);
                         String desc = reminderCursor.getString(2);
@@ -175,7 +188,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         Cursor habitTypeCursor = this.fetchBySelection(TABLE_HABIT_TYPES,
                                 new String[] {DatabaseAttributes.ID},
                                 new String[] {Integer.toString(habitTypeId)});
-                        if (habitTypeCursor != null) {
+                        if (isNonEmptyCursor(habitTypeCursor)) {
                             habitTypeCursor.moveToFirst();
                             String habitTypeName = habitTypeCursor.getString(1);
                             HabitType type = new HabitType(habitTypeId, habitTypeName);
@@ -197,7 +210,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = this.fetchBySelection(TABLE_DAILY_DATA,
                 new String[]{DatabaseAttributes.DAILY_DATA_DATE},
                 new String[]{date.toString()});
-        if (cursor != null) {
+        if (isNonEmptyCursor(cursor)) {
             cursor.moveToFirst();
             dailyData = new DailyData(cursor.getInt(0), cursor.getString(0));
         }
@@ -210,7 +223,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = this.fetchBySelection(TABLE_HABITS,
                 new String[]{DatabaseAttributes.ID},
                 new String[]{Integer.toString(id)});
-        if (cursor != null) {
+        if (isNonEmptyCursor(cursor)) {
             cursor.moveToFirst();
             habit = new Habit(cursor.getInt(0), null, cursor.getString(2), cursor.getInt(3),
                     cursor.getInt(4));
@@ -231,7 +244,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     new String[] {
                             Integer.toString(habit.getId()),
                             Integer.toString(dailyData.getId())});
-            if (cursor != null) {
+            if (isNonEmptyCursor(cursor)) {
                 cursor.moveToFirst();
                 habitCount = new DailyHabitCount(cursor.getInt(0), habit, dailyData, cursor.getInt(4));
             }
@@ -265,5 +278,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getReadableDatabase();
         database.insert(TABLE_HABITS, null, habit.toContentValues());
         database.close();
+    }
+
+    public void createHabitType(HabitType habitType) {
+        SQLiteDatabase database = this.getReadableDatabase();
+        database.insert(TABLE_HABIT_TYPES, null, habitType.toContentValues());
+        database.close();
+    }
+
+    public boolean isNonEmptyCursor(Cursor cursor) {
+        return cursor != null && cursor.getCount() > 0;
     }
 }
