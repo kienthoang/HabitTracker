@@ -5,9 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * The database handler.
@@ -206,13 +208,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // Update habit daily counts Activity.
     public DailyData getDailyDataByDate(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         DailyData dailyData = null;
         Cursor cursor = this.fetchBySelection(TABLE_DAILY_DATA,
                 new String[]{DatabaseAttributes.DAILY_DATA_DATE},
-                new String[]{date.toString()});
+                new String[]{formatter.format(date)});
         if (isNonEmptyCursor(cursor)) {
             cursor.moveToFirst();
-            dailyData = new DailyData(cursor.getInt(0), cursor.getString(0));
+            String dateStr = cursor.getString(1);
+            try {
+                dailyData = new DailyData(cursor.getInt(0), formatter.parse(dateStr));
+            } catch (Exception e) {
+            }
         }
 
         return dailyData;
@@ -232,22 +239,44 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return habit;
     }
 
+    public Habit getHabitByName(String name) {
+        Habit habit = null;
+        Cursor cursor = this.fetchBySelection(TABLE_HABITS,
+                new String[]{DatabaseAttributes.HABIT_NAME},
+                new String[]{name});
+        if (isNonEmptyCursor(cursor)) {
+            cursor.moveToFirst();
+            habit = new Habit(cursor.getInt(0), null, cursor.getString(2), cursor.getInt(3),
+                    cursor.getInt(4));
+        }
+
+        return habit;
+    }
+
     public DailyHabitCount getHabitCountByHabitAndDate(Habit habit, Date date) {
         DailyHabitCount habitCount = null;
 
         DailyData dailyData = this.getDailyDataByDate(date);
         if (dailyData != null) {
-            Cursor cursor = this.fetchBySelection(TABLE_DAILY_HABIT_COUNTS,
-                    new String[] {
-                            DatabaseAttributes.DAILY_HABIT_COUNT_HABIT_ID,
-                            DatabaseAttributes.DAILY_HABIT_COUNT_DATA_ID},
-                    new String[] {
-                            Integer.toString(habit.getId()),
-                            Integer.toString(dailyData.getId())});
-            if (isNonEmptyCursor(cursor)) {
-                cursor.moveToFirst();
-                habitCount = new DailyHabitCount(cursor.getInt(0), habit, dailyData, cursor.getInt(4));
-            }
+            habitCount = getHabitCountByHabitAndDailyData(habit, dailyData);
+        }
+
+        return habitCount;
+    }
+
+    public DailyHabitCount getHabitCountByHabitAndDailyData(Habit habit, DailyData dailyData) {
+        DailyHabitCount habitCount = null;
+
+        Cursor cursor = this.fetchBySelection(TABLE_DAILY_HABIT_COUNTS,
+                new String[]{
+                        DatabaseAttributes.DAILY_HABIT_COUNT_HABIT_ID,
+                        DatabaseAttributes.DAILY_HABIT_COUNT_DATA_ID},
+                new String[]{
+                        Integer.toString(habit.getId()),
+                        Integer.toString(dailyData.getId())});
+        if (isNonEmptyCursor(cursor)) {
+            cursor.moveToFirst();
+            habitCount = new DailyHabitCount(cursor.getInt(0), habit, dailyData, cursor.getInt(3));
         }
 
         return habitCount;
@@ -283,6 +312,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void createHabitType(HabitType habitType) {
         SQLiteDatabase database = this.getReadableDatabase();
         database.insert(TABLE_HABIT_TYPES, null, habitType.toContentValues());
+        database.close();
+    }
+
+    public void createDailyData(DailyData dailyData) {
+        SQLiteDatabase database = this.getReadableDatabase();
+        database.insert(TABLE_DAILY_DATA, null, dailyData.toContentValues());
+        database.close();
+    }
+
+    public void createDailyHabitCount(DailyHabitCount dailyHabitCount) {
+        SQLiteDatabase database = this.getReadableDatabase();
+        database.insert(TABLE_DAILY_HABIT_COUNTS, null, dailyHabitCount.toContentValues());
+        database.close();
+    }
+
+    public void updateDailyHabitCount(DailyHabitCount dailyHabitCount) {
+        SQLiteDatabase database = this.getReadableDatabase();
+        database.update(TABLE_DAILY_HABIT_COUNTS, dailyHabitCount.toContentValues(),
+                DatabaseAttributes.ID + "=" + dailyHabitCount.getId(), null);
         database.close();
     }
 

@@ -20,6 +20,10 @@
             android:name=".AddHabitActivity"
             android:label="AddHabitActivity" >
         </activity>
+        <activity
+            android:name=".AddDailyDataActivity"
+            android:label="AddDailyDataActivity" >
+        </activity>
     </application>
 
 </manifest>

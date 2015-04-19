@@ -142,7 +142,10 @@ public class MainActivity extends ActionBarActivity {
 
         if (id == R.id.action_add_habit) {
             Intent intent = new Intent(this, AddHabitActivity.class);
-            startActivityForResult(intent, 1);
+            startActivity(intent);
+        } else if (id == R.id.action_log_habit) {
+            Intent intent = new Intent(this, AddDailyDataActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -151,7 +154,9 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (this.mode == 2) {
+        if (this.mode == 1) {
+            openFragment(new HomeFragment());
+        } else if (this.mode == 2) {
             openFragment(new HabitsFragment());
         }
     }
