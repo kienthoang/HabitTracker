@@ -151,20 +151,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // index 0 is break, 1 is build.
-    public int[] getHabitCountsByDate(Date date) {
-        int[] counts = new int[2];
+    public List<DailyHabitCount> getHabitCountsByDate(Date date) {
+        List<DailyHabitCount> habitCounts = new ArrayList<>();
         List<Habit> allHabits = this.getAllHabits();
         for (Habit habit : allHabits) {
             DailyHabitCount dailyCount = this.getHabitCountByHabitAndDate(habit, date);
-            int count = dailyCount.getCount();
-            if (habit.isBreakHabit()) {
-                counts[0] -= count;
-            } else {
-                counts[1] += count;
+            if (dailyCount != null) {
+                habitCounts.add(dailyCount);
             }
         }
 
-        return counts;
+        return habitCounts;
     }
 
     public List<Reminder> getRemindersForDate(Date date) {
