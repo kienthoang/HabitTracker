@@ -38,6 +38,7 @@
         android:layout_marginLeft="2dp" />
 
     <ToggleButton
+        android:id="@+id/edit_break_build"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:textOn="build"

@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -141,9 +142,17 @@ public class MainActivity extends ActionBarActivity {
 
         if (id == R.id.action_add_habit) {
             Intent intent = new Intent(this, AddHabitActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (this.mode == 2) {
+            openFragment(new HabitsFragment());
+        }
     }
 }

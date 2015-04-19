@@ -25,23 +25,6 @@ public class HabitsFragment extends ListFragment {
                 HabitType type = new HabitType(typeName);
                 databaseHandler.createHabitType(type);
             }
-
-            // Add habits (for testing only).
-            HabitType type = databaseHandler.getHabitTypeByName("Working out");
-            Habit habit = new Habit(type, "Lifting", Habit.HABIT_BUILD, 1);
-            databaseHandler.createHabit(habit);
-
-            type = databaseHandler.getHabitTypeByName("Addiction");
-            habit = new Habit(type, "Watching Television", Habit.HABIT_BREAK, 1);
-            databaseHandler.createHabit(habit);
-
-            type = databaseHandler.getHabitTypeByName("Smoking");
-            habit = new Habit(type, "Smoking cigars", Habit.HABIT_BREAK, 0);
-            databaseHandler.createHabit(habit);
-
-            type = databaseHandler.getHabitTypeByName("Walking");
-            habit = new Habit(type, "Walking around", Habit.HABIT_BUILD, 3);
-            databaseHandler.createHabit(habit);
         }
 
         databaseHandler.close();
