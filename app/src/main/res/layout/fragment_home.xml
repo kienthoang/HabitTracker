@@ -6,92 +6,106 @@
     android:background="#ffffff">
 
     <LinearLayout
+        android:id="@+id/home_progress_section"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="230dp"
+        android:orientation="horizontal"
+        android:background="@drawable/drawable_home_progress">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:orientation="horizontal"
-            android:background="@drawable/drawable_home_progress">
+            android:id="@+id/build_progress_bar"
+            android:layout_width="200px"
+            android:layout_height="400px"
+            android:background="@drawable/drawable_progress_build"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="80dp"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/build_progress_bar"
-                android:layout_width="200px"
-                android:layout_height="400px"
-                android:background="@drawable/drawable_progress_build"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="80dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                <TextView
+                    android:id="@+id/build_progress_percentage"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="90%"
+                    android:textColor="#ffffff"
+                    android:textSize="25dp"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/build_progress_count"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="9/10 build habits"
+                    android:textColor="#DCDCDC"
+                    android:textSize="10dp"
+                    android:gravity="center" />
 
-                    <TextView
-                        android:id="@+id/build_progress_percentage"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="90%"
-                        android:textColor="#ffffff"
-                        android:textSize="25dp"
-                        android:gravity="center" />
-                    <TextView
-                        android:id="@+id/build_progress_count"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="9/10 build habits"
-                        android:textColor="#DCDCDC"
-                        android:textSize="10dp"
-                        android:gravity="center" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/break_progress_bar"
-                android:layout_width="100dp"
-                android:layout_height="200dp"
-                android:background="@drawable/drawable_progress_break"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="20dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/break_progress_percentage"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="90%"
-                        android:textColor="#ffffff"
-                        android:textSize="25dp"
-                        android:gravity="center"/>
-                    <TextView
-                        android:id="@+id/break_progress_count"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="9/10 break habits"
-                        android:textColor="#DCDCDC"
-                        android:textSize="10dp"
-                        android:gravity="center" />
-
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:background="#DEDEDE" />
+        <LinearLayout
+            android:id="@+id/break_progress_bar"
+            android:layout_width="100dp"
+            android:layout_height="200dp"
+            android:background="@drawable/drawable_progress_break"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="20dp"
+            android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/break_progress_percentage"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="90%"
+                    android:textColor="#ffffff"
+                    android:textSize="25dp"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/break_progress_count"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="9/10 break habits"
+                    android:textColor="#DCDCDC"
+                    android:textSize="10dp"
+                    android:gravity="center" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#DEDEDE" />
+
+    <LinearLayout
+        android:id="@+id/home_reminders_section"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:padding="1dp"
+        android:orientation="vertical"
+        android:background="@drawable/drawerable_home_reminders">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="20dp"
+            android:orientation="vertical"
+            android:background="@color/reminders_header">
+
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout> 
