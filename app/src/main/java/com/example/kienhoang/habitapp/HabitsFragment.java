@@ -43,6 +43,8 @@ public class HabitsFragment extends ListFragment {
             habit = new Habit(type, "Walking around", Habit.HABIT_BUILD, 3);
             databaseHandler.createHabit(habit);
         }
+
+        databaseHandler.close();
     }
 
     @Override
@@ -55,12 +57,8 @@ public class HabitsFragment extends ListFragment {
         // Pull the list of all habits
         DatabaseHandler databaseHandler = new DatabaseHandler(getActivity());
         List<Habit> habits = databaseHandler.getAllHabits();
-        List<String> habitNames = new ArrayList<>();
-        for (Habit habit : habits) {
-            habitNames.add(habit.getName());
-        }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, habitNames);
+        HabitsFragmentAdapter adapter = new HabitsFragmentAdapter(getActivity(), habits);
         setListAdapter(adapter);
 
         return rootView;

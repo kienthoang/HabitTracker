@@ -1,5 +1,6 @@
 package com.example.kienhoang.habitapp;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -138,9 +139,9 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_add_habit) {
+            Intent intent = new Intent(this, AddHabitActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

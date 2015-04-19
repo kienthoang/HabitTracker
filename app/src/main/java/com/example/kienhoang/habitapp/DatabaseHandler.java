@@ -139,7 +139,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     int goal = cursor.getInt(3);
                     int breakOrBuild = cursor.getInt(4);
 
-                    Habit habit = new Habit(id, habitType, name, goal, breakOrBuild);
+                    Habit habit = new Habit(id, habitType, name, breakOrBuild, goal);
                     habits.add(habit);
                 }
             } while (cursor.moveToNext());

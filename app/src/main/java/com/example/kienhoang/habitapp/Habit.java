@@ -40,6 +40,10 @@ public class Habit implements DatabaseObject {
         return this.name;
     }
 
+    public int getGoal() {
+        return this.goal;
+    }
+
     public boolean isBreakHabit() {
         return this.breakOrBuild == HABIT_BREAK;
     }
