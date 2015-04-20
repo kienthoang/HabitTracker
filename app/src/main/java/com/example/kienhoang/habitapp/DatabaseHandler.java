@@ -22,8 +22,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_HABIT_TYPES = "habittypes";
     private static final String TABLE_REMINDERS = "reminders";
     private static final String TABLE_DAILY_DATA = "dailydata";
-    private static final String TABLE_DAILY_REMINDERS = "dailyreminders";
     private static final String TABLE_DAILY_HABIT_COUNTS = "dailyhabitcounts";
+    private static final String TABLE_FEED_ITEM = "feeditems";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -53,11 +53,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + DatabaseAttributes.ID + " INTEGER PRIMARY KEY,"
                 + DatabaseAttributes.DAILY_DATA_DATE + " STRING NOT NULL"
                 + ")";
-        String createDailyRemindersTableSQL = "CREATE TABLE " + TABLE_DAILY_REMINDERS + "("
-                + DatabaseAttributes.ID + " INTEGER PRIMARY KEY,"
-                + DatabaseAttributes.DAILY_REMINDER_DATA_ID + " INTEGER NOT NULL,"
-                + DatabaseAttributes.DAILY_REMINDER_ID + " INTEGER NOT NULL"
-                + ")";
         String createDailyHabitCountsTableSQL = "CREATE TABLE " + TABLE_DAILY_HABIT_COUNTS + "("
                 + DatabaseAttributes.ID + " INTEGER PRIMARY KEY,"
                 + DatabaseAttributes.DAILY_HABIT_COUNT_DATA_ID + " INTEGER NOT NULL,"
@@ -65,11 +60,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + DatabaseAttributes.DAILY_HABIT_COUNT + " INTEGER"
                 + ")";
 
+
         database.execSQL(createHabitsTableSQL);
         database.execSQL(createHabitTypesTableSQL);
         database.execSQL(createRemindersTableSQL);
         database.execSQL(createDailyDataTableSQL);
-        database.execSQL(createDailyRemindersTableSQL);
         database.execSQL(createDailyHabitCountsTableSQL);
     }
 
@@ -79,7 +74,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         database.execSQL("DROP TABLE IF EXISTS " + TABLE_HABIT_TYPES);
         database.execSQL("DROP TABLE IF EXISTS " + TABLE_REMINDERS);
         database.execSQL("DROP TABLE IF EXISTS " + TABLE_DAILY_DATA);
-        database.execSQL("DROP TABLE IF EXISTS " + TABLE_DAILY_REMINDERS);
         database.execSQL("DROP TABLE IF EXISTS " + TABLE_DAILY_HABIT_COUNTS);
 
         onCreate(database);
@@ -126,7 +120,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public List<Habit> getAllHabits() {
-        List<Habit> habits = new ArrayList<Habit>();
+        List<Habit> habits = new ArrayList<>();
         SQLiteDatabase database = this.getReadableDatabase();
         Cursor cursor = database.rawQuery("SELECT * FROM " + TABLE_HABITS, null);
 
@@ -164,42 +158,55 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return habitCounts;
     }
 
-    public List<Reminder> getRemindersForDate(Date date) {
-        List<Reminder> reminders = new ArrayList<Reminder>();
-        DailyData dailyData = this.getDailyDataByDate(date);
-        if (dailyData != null) {
-            Cursor cursor = this.fetchBySelection(TABLE_DAILY_REMINDERS,
-                    new String[] {DatabaseAttributes.DAILY_REMINDER_DATA_ID},
-                    new String[] {Integer.toString(dailyData.getId())});
-            if (isNonEmptyCursor(cursor)) {
-                cursor.moveToFirst();
+    public List<Reminder> getAllReminders() {
+        List<Reminder> reminders = new ArrayList<>();
+        SQLiteDatabase database = this.getReadableDatabase();
+        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLE_REMINDERS, null);
 
-                do {
-                    int reminderId = cursor.getInt(2);
-                    Cursor reminderCursor = this.fetchBySelection(TABLE_REMINDERS,
-                            new String[] {DatabaseAttributes.ID},
-                            new String[] {Integer.toString(reminderId)});
-                    if (isNonEmptyCursor(reminderCursor)) {
-                        reminderCursor.moveToFirst();
-                        String title = reminderCursor.getString(1);
-                        String desc = reminderCursor.getString(2);
-                        int habitTypeId = reminderCursor.getInt(3);
-                        Cursor habitTypeCursor = this.fetchBySelection(TABLE_HABIT_TYPES,
-                                new String[] {DatabaseAttributes.ID},
-                                new String[] {Integer.toString(habitTypeId)});
-                        if (isNonEmptyCursor(habitTypeCursor)) {
-                            habitTypeCursor.moveToFirst();
-                            String habitTypeName = habitTypeCursor.getString(1);
-                            HabitType type = new HabitType(habitTypeId, habitTypeName);
-                            Reminder reminder = new Reminder(type, title, desc);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
 
-                            reminders.add(reminder);
-                        }
-                    }
-                } while (cursor.moveToNext());
+            do {
+                HabitType habitType = this.getHabitTypeById(cursor.getInt(3));
+                if (habitType != null) {
+                    Reminder reminder = new Reminder(cursor.getInt(0), habitType, cursor.getString(1), cursor.getString(2));
+                    reminders.add(reminder);
+                }
+            } while (cursor.moveToNext());
+        }
+
+        return reminders;
+    }
+
+    public Reminder getReminderForHabitTypeId(int habitTypeId) {
+        Reminder reminder = null;
+
+        Cursor cursor = this.fetchBySelection(TABLE_REMINDERS,
+                new String[]{DatabaseAttributes.ID},
+                new String[]{Integer.toString(habitTypeId)});
+        if (isNonEmptyCursor(cursor)) {
+            cursor.moveToFirst();
+            HabitType habitType = this.getHabitTypeById(habitTypeId);
+            reminder = new Reminder(cursor.getInt(0), habitType, cursor.getString(1), cursor.getString(2));
+        }
+
+        return reminder;
+    }
+
+    public List<Reminder> getRelevantReminders() {
+        List<Habit> habits = this.getAllHabits();
+        List<Integer> typeIds = new ArrayList<>();
+        for (Habit habit : habits) {
+            Integer typeId = habit.getHabitType().getId();
+            if (typeIds.indexOf(typeId) == -1) {
+                typeIds.add(typeId);
             }
         }
 
+        List<Reminder> reminders = new ArrayList<>();
+        for (Integer typeId : typeIds) {
+            reminders.add(this.getReminderForHabitTypeId(typeId));
+        }
         return reminders;
     }
 
@@ -321,6 +328,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void createDailyHabitCount(DailyHabitCount dailyHabitCount) {
         SQLiteDatabase database = this.getReadableDatabase();
         database.insert(TABLE_DAILY_HABIT_COUNTS, null, dailyHabitCount.toContentValues());
+        database.close();
+    }
+
+    public void createReminder(Reminder reminder) {
+        SQLiteDatabase database = this.getReadableDatabase();
+        database.insert(TABLE_REMINDERS, null, reminder.toContentValues());
         database.close();
     }
 

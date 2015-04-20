@@ -1,4 +1,4 @@
 <resources>
     <color name="ColorPrimary">#225cff</color>
-    <color name="reminders_header">#4CBB17</color>
+    <color name="reminders_header">#225cff</color>
 </resources>

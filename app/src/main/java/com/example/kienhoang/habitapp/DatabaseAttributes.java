@@ -25,4 +25,7 @@ public class DatabaseAttributes {
     public static final String DAILY_HABIT_COUNT = "count";
     public static final String DAILY_HABIT_COUNT_DATA_ID = "data_id";
     public static final String DAILY_HABIT_COUNT_HABIT_ID = "habit_id";
+
+    public static final String FEED_ITEM_DATE = "date";
+    public static final String FEED_ITEM_HABIT_ID = "habit_id";
 }
