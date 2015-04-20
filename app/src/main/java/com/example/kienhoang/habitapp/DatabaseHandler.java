@@ -62,6 +62,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String createFeedItemTableSQL = "CREATE TABLE " + TABLE_FEED_ITEMS + "("
                 + DatabaseAttributes.ID + " INTEGER PRIMARY KEY,"
                 + DatabaseAttributes.FEED_ITEM_DATE + " STRING NOT NULL,"
+                + DatabaseAttributes.FEED_ITEM_TIME + " STRING NOT NULL,"
                 + DatabaseAttributes.FEED_ITEM_HABIT_ID + " INTEGER NOT NULL"
                 + ")";
 
@@ -311,6 +312,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return habitTypes;
+    }
+
+    public List<FeedItem> getAllFeedItems() {
+        SQLiteDatabase database = this.getReadableDatabase();
+        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLE_FEED_ITEMS, null);
+
+        List<FeedItem> feedItems = new ArrayList<>();
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+
+            do {
+                int id = cursor.getInt(0);
+                String date = cursor.getString(1);
+                String time = cursor.getString(2);
+                Habit habit = this.getHabitById(cursor.getInt(3));
+
+                FeedItem feedItem = new FeedItem(id, habit, date, time);
+                feedItems.add(feedItem);
+            } while (cursor.moveToNext());
+        }
+
+        return feedItems;
     }
 
     public void createHabit(Habit habit) {

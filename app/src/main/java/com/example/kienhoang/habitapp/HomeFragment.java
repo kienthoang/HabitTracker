@@ -1,15 +1,18 @@
 package com.example.kienhoang.habitapp;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -17,9 +20,23 @@ import java.util.Random;
 /**
  * Created by kienhoang on 4/17/15.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends ListFragment {
+    private static final String[] HABIT_TYPES = {"Working out", "Addiction", "Smoking", "Walking", "Sleeping"};
+
     public void initialPopulate() {
         DatabaseHandler databaseHandler = new DatabaseHandler(getActivity());
+
+        // Add habit types.
+        List<HabitType> allHabitTypes = databaseHandler.getAllHabitTypes();
+        if (allHabitTypes.isEmpty()) {
+            // Add habit types.
+            for (String typeName : HABIT_TYPES) {
+                HabitType type = new HabitType(typeName);
+                databaseHandler.createHabitType(type);
+            }
+        }
+
+        // Add reminders
         List<Reminder> allReminders = databaseHandler.getAllReminders();
         if (allReminders.isEmpty()) {
             // Add reminders.
@@ -64,6 +81,12 @@ public class HomeFragment extends Fragment {
 
         initialPopulate();
 
+        // Make progress and reminder header of feed items list.
+        LayoutInflater layoutInflater = (LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout progressAndReminder = (LinearLayout) layoutInflater.inflate(R.layout.home_progress_and_reminder, null, false);
+        ListView feed = (ListView) rootView.findViewById(android.R.id.list);
+        feed.addHeaderView(progressAndReminder);
+
         DatabaseHandler databaseHandler = new DatabaseHandler(getActivity());
         List<Habit> allHabits = databaseHandler.getAllHabits();
         int numBuildHabits = 0;
@@ -87,7 +110,10 @@ public class HomeFragment extends Fragment {
                 numFinishedHabits += 1;
             }
         }
-        int buildPercentage = (int) (((float) numFinishedHabits) / numBuildHabits * 100);
+        int buildPercentage = 100;
+        if (numBuildHabits > 0) {
+            buildPercentage = (int) (((float) numFinishedHabits) / numBuildHabits * 100);
+        }
         ViewGroup.LayoutParams params = buildProgressBar.getLayoutParams();
         params.height = Math.max(buildPercentage * 4, 100);
         params.width = 200;
@@ -104,7 +130,10 @@ public class HomeFragment extends Fragment {
                 numCleanHabits -= 1;
             }
         }
-        int breakPercentage = (int) (((float) numCleanHabits) / numBreakHabits * 100);
+        int breakPercentage = 100;
+        if (numBreakHabits > 0) {
+            breakPercentage = (int) (((float) numCleanHabits) / numBreakHabits * 100);
+        }
         params = breakProgressBar.getLayoutParams();
         params.height = Math.max(breakPercentage * 4, 100);
         params.width = 200;
@@ -115,13 +144,23 @@ public class HomeFragment extends Fragment {
 
         // Set reminder.
         List<Reminder> reminders = databaseHandler.getRelevantReminders();
-        Random randomGenerator = new Random();
-        int index = randomGenerator.nextInt(reminders.size());
-        Reminder reminder = reminders.get(index);
-        TextView reminderTitleView = (TextView) rootView.findViewById(R.id.reminders_section_title);
-        reminderTitleView.setText(reminder.getTitle());
-        TextView descriptionTitleView = (TextView) rootView.findViewById(R.id.reminders_section_description);
-        descriptionTitleView.setText(reminder.getDescription());
+        if (!reminders.isEmpty()) {
+            Random randomGenerator = new Random();
+            int index = randomGenerator.nextInt(reminders.size());
+            Reminder reminder = reminders.get(index);
+            TextView reminderTitleView = (TextView) rootView.findViewById(R.id.reminders_section_title);
+            reminderTitleView.setText(reminder.getTitle());
+            TextView descriptionTitleView = (TextView) rootView.findViewById(R.id.reminders_section_description);
+            descriptionTitleView.setText(reminder.getDescription());
+        }
+
+        // Load feed items.
+        List<FeedItem> feedItems = databaseHandler.getAllFeedItems();
+        Collections.reverse(feedItems);
+        if (!feedItems.isEmpty()) {
+            FeedItemAdapter adapter = new FeedItemAdapter(getActivity(), feedItems);
+            setListAdapter(adapter);
+        }
 
         return rootView;
     }
