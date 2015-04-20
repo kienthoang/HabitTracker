@@ -58,6 +58,10 @@ public class AddDailyDataActivity extends Activity {
             databaseHandler.updateDailyHabitCount(dailyHabitCount);
         }
 
+        // Create feed item.
+        FeedItem feedItem = new FeedItem(habit, new Date());
+        databaseHandler.createFeedItem(feedItem);
+
         databaseHandler.close();
     }
 

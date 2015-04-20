@@ -23,7 +23,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_REMINDERS = "reminders";
     private static final String TABLE_DAILY_DATA = "dailydata";
     private static final String TABLE_DAILY_HABIT_COUNTS = "dailyhabitcounts";
-    private static final String TABLE_FEED_ITEM = "feeditems";
+    private static final String TABLE_FEED_ITEMS = "feeditems";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -59,13 +59,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + DatabaseAttributes.DAILY_HABIT_COUNT_HABIT_ID + " INTEGER NOT NULL,"
                 + DatabaseAttributes.DAILY_HABIT_COUNT + " INTEGER"
                 + ")";
-
+        String createFeedItemTableSQL = "CREATE TABLE " + TABLE_FEED_ITEMS + "("
+                + DatabaseAttributes.ID + " INTEGER PRIMARY KEY,"
+                + DatabaseAttributes.FEED_ITEM_DATE + " STRING NOT NULL,"
+                + DatabaseAttributes.FEED_ITEM_HABIT_ID + " INTEGER NOT NULL"
+                + ")";
 
         database.execSQL(createHabitsTableSQL);
         database.execSQL(createHabitTypesTableSQL);
         database.execSQL(createRemindersTableSQL);
         database.execSQL(createDailyDataTableSQL);
         database.execSQL(createDailyHabitCountsTableSQL);
+        database.execSQL(createFeedItemTableSQL);
     }
 
     @Override
@@ -75,6 +80,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         database.execSQL("DROP TABLE IF EXISTS " + TABLE_REMINDERS);
         database.execSQL("DROP TABLE IF EXISTS " + TABLE_DAILY_DATA);
         database.execSQL("DROP TABLE IF EXISTS " + TABLE_DAILY_HABIT_COUNTS);
+        database.execSQL("DROP TABLE IF EXISTS " + TABLE_FEED_ITEMS);
 
         onCreate(database);
     }
@@ -336,6 +342,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         database.insert(TABLE_REMINDERS, null, reminder.toContentValues());
         database.close();
     }
+
+    public void createFeedItem(FeedItem feedItem) {
+        SQLiteDatabase database = this.getReadableDatabase();
+        database.insert(TABLE_FEED_ITEMS, null, feedItem.toContentValues());
+        database.close();
+    }
+
 
     public void updateDailyHabitCount(DailyHabitCount dailyHabitCount) {
         SQLiteDatabase database = this.getReadableDatabase();
