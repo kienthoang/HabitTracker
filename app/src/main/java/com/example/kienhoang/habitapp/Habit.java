@@ -32,10 +32,6 @@ public class Habit implements DatabaseObject {
         return this.id;
     }
 
-    public void setId() {
-        this.id = id;
-    }
-
     public String getName() {
         return this.name;
     }

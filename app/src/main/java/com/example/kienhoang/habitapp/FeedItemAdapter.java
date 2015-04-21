@@ -49,27 +49,26 @@ public class FeedItemAdapter extends BaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.feed_item, null);
         }
 
+        TextView userTextView = (TextView) view.findViewById(R.id.feed_item_user);
+        ImageView profileView = (ImageView) view.findViewById(R.id.feed_item_profile);
         Habit habit;
-        if (position == this.feedItems.size() - 2) {
+        if (position == this.feedItems.size() - 2 && feedItem == null) {
             habit = new Habit(null, "Sprinting", Habit.HABIT_BUILD, 1);
 
-            ImageView profileView = (ImageView) view.findViewById(R.id.feed_item_profile);
             profileView.setBackgroundResource(R.drawable.circle_profile_2);
-
-            TextView userTextView = (TextView) view.findViewById(R.id.feed_item_user);
             userTextView.setText("John Malkovich logged");
-        } else if (position == this.feedItems.size() - 1) {
+        } else if (position == this.feedItems.size() - 1 && feedItem == null) {
             habit = new Habit(null, "Yoga", Habit.HABIT_BUILD, 1);
 
-            ImageView profileView = (ImageView) view.findViewById(R.id.feed_item_profile);
             profileView.setBackgroundResource(R.drawable.circle_profile_4);
-
-            TextView userTextView = (TextView) view.findViewById(R.id.feed_item_user);
             userTextView.setText("Katheryn Winnick logged");
         } else {
             habit = feedItem.getHabit();
 
-            TextView timeTextView = (TextView) view.findViewById(R.id.feed_item_time);timeTextView.setText(feedItem.getDate() + " " + feedItem.getTime());
+            TextView timeTextView = (TextView) view.findViewById(R.id.feed_item_time);
+            timeTextView.setText(feedItem.getDate() + " " + feedItem.getTime());
+            profileView.setBackgroundResource(R.drawable.circle_profile);
+            userTextView.setText("Kien Hoang logged");
         }
         TextView nameTextView = (TextView) view.findViewById(R.id.habit_name);
         nameTextView.setText(habit.getName());

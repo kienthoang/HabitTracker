@@ -243,8 +243,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{Integer.toString(id)});
         if (isNonEmptyCursor(cursor)) {
             cursor.moveToFirst();
-            habit = new Habit(cursor.getInt(0), null, cursor.getString(2), cursor.getInt(3),
-                    cursor.getInt(4));
+            habit = new Habit(cursor.getInt(0), null, cursor.getString(2), cursor.getInt(4),
+                    cursor.getInt(3));
         }
 
         return habit;
