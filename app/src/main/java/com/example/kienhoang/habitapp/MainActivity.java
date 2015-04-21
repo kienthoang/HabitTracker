@@ -21,8 +21,8 @@ public class MainActivity extends ActionBarActivity {
     //First We Declare Titles And Icons For Our Navigation Drawer List View
     //This Icons And Titles Are holded in an Array as you can see
 
-    String TITLES[] = {"Home", "Habits"};
-    int ICONS[] = {R.drawable.ic_home, R.drawable.ic_habits};
+    String TITLES[] = {"Home", "Habits", "Friends"};
+    int ICONS[] = {R.drawable.ic_home, R.drawable.ic_habits, R.drawable.ic_users};
 
     RecyclerView mRecyclerView;                           // Declaring RecyclerView
     RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
@@ -79,9 +79,15 @@ public class MainActivity extends ActionBarActivity {
                         case 1:
                         default:
                             openFragment(new HomeFragment());
+                            setTitle("HabitTracker");
                             break;
                         case 2:
                             openFragment(new HabitsFragment());
+                            setTitle("Habits");
+                            break;
+                        case 3:
+                            openFragment(new FriendsFragment());
+                            setTitle("Friends");
                             break;
                     }
 
@@ -128,6 +134,9 @@ public class MainActivity extends ActionBarActivity {
             case 2:
                 menuId = R.menu.habits;
                 break;
+            case 3:
+                menuId = R.menu.friends;
+                break;
         }
         getMenuInflater().inflate(menuId, menu);
         return true;
@@ -146,6 +155,7 @@ public class MainActivity extends ActionBarActivity {
         } else if (id == R.id.action_log_habit) {
             Intent intent = new Intent(this, AddDailyDataActivity.class);
             startActivity(intent);
+        } else if (id == R.id.action_add_friend) {
         }
 
         return super.onOptionsItemSelected(item);
@@ -154,10 +164,18 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (this.mode == 1) {
-            openFragment(new HomeFragment());
-        } else if (this.mode == 2) {
-            openFragment(new HabitsFragment());
+
+        switch (this.mode) {
+            case 1:
+            default:
+                openFragment(new HomeFragment());
+                break;
+            case 2:
+                openFragment(new HabitsFragment());
+                break;
+            case 3:
+                openFragment(new FriendsFragment());
+                break;
         }
     }
 }

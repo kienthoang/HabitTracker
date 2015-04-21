@@ -157,6 +157,8 @@ public class HomeFragment extends ListFragment {
         // Load feed items.
         List<FeedItem> feedItems = databaseHandler.getAllFeedItems();
         Collections.reverse(feedItems);
+        feedItems.add(null);
+        feedItems.add(null);
         if (!feedItems.isEmpty()) {
             FeedItemAdapter adapter = new FeedItemAdapter(getActivity(), feedItems);
             setListAdapter(adapter);
