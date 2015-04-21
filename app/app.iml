@@ -91,5 +91,6 @@
     <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="circleimageview-1.2.1" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-22.0.0" level="project" />
+    <orderEntry type="module" module-name="GraphView" exported="" />
   </component>
 </module>
