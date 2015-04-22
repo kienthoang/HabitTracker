@@ -84,7 +84,7 @@ public class HabitGraphActivity extends Activity {
 
             graph.getViewport().setYAxisBoundsManual(true);
             graph.getViewport().setMinY(0);
-            graph.getViewport().setMinY(5);
+            graph.getViewport().setMaxY(5);
         }
 
         databaseHandler.close();
