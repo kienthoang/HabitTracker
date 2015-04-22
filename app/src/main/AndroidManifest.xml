@@ -24,6 +24,10 @@
             android:name=".AddDailyDataActivity"
             android:label="AddDailyDataActivity" >
         </activity>
+        <activity
+            android:name=".HabitGraphActivity"
+            android:label="HabitGraphActivity" >
+        </activity>
     </application>
 
 </manifest>

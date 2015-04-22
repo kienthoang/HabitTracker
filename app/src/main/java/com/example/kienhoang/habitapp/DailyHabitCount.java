@@ -42,6 +42,10 @@ public class DailyHabitCount {
         return this.habit;
     }
 
+    public DailyData getDailyData() {
+        return this.dailyData;
+    }
+
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
         values.put(DatabaseAttributes.DAILY_HABIT_COUNT_DATA_ID, this.dailyData.getId());

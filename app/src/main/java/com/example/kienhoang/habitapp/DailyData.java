@@ -30,6 +30,10 @@ public class DailyData {
         this.id = id;
     }
 
+    public Date getDate() {
+        return this.date;
+    }
+
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);

@@ -164,6 +164,8 @@ public class HomeFragment extends ListFragment {
             setListAdapter(adapter);
         }
 
+        databaseHandler.close();
+
         return rootView;
     }
 }

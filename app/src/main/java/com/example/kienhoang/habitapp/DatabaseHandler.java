@@ -217,6 +217,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return reminders;
     }
 
+    public DailyData getDailyDataById(int id) {
+        DailyData dailyData = null;
+        Cursor cursor = this.fetchBySelection(TABLE_DAILY_DATA,
+                new String[]{DatabaseAttributes.ID},
+                new String[]{Integer.toString(id)});
+        if (isNonEmptyCursor(cursor)) {
+            cursor.moveToFirst();
+            String dateStr = cursor.getString(1);
+
+            try {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                dailyData = new DailyData(cursor.getInt(0), formatter.parse(dateStr));
+            } catch (Exception e) {
+            }
+        }
+
+        return dailyData;
+    }
+
     // Update habit daily counts Activity.
     public DailyData getDailyDataByDate(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -291,6 +310,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return habitCount;
+    }
+
+    public List<DailyHabitCount> getHabitCountsByHabit(Habit habit) {
+        List<DailyHabitCount> habitCounts = new ArrayList<>();
+
+        Cursor cursor = this.fetchBySelection(TABLE_DAILY_HABIT_COUNTS,
+                new String[]{
+                        DatabaseAttributes.DAILY_HABIT_COUNT_HABIT_ID},
+                new String[]{
+                        Integer.toString(habit.getId())});
+        if (isNonEmptyCursor(cursor)) {
+            cursor.moveToFirst();
+
+            do {
+                int dailyDataId = cursor.getInt(1);
+                DailyData dailyData = getDailyDataById(dailyDataId);
+
+                DailyHabitCount habitCount = new DailyHabitCount(cursor.getInt(0), habit, dailyData, cursor.getInt(3));
+                habitCounts.add(habitCount);
+            } while (cursor.moveToNext());
+        }
+
+        return habitCounts;
     }
 
     // Add-habit Activity.
